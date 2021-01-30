@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "gamecontroller": "0.0.2"
+    "gamecontroller": "0.0.2",
+    "pi-blaster.js": "^0.1.3"
   }
 }
