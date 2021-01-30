@@ -17,19 +17,18 @@ app.get("/throttle/:value", (request, response) => {
 	response.send(request.params.value);
 });
 
-
-function steer(value){
-	const filteredValue = Math.min(Math.max(value, -100), 100)
-	const convertedValue = (195 + filteredValue/3)/1000;
-	console.log("Setting steering to: ",convertedValue);
-        piblaster.setPwm(17, convertedValue);
+function steer(value) {
+	const filteredValue = Math.min(Math.max(value, -100), 100);
+	const convertedValue = (195 + filteredValue / 3) / 1000;
+	console.log("Setting steering to: ", convertedValue);
+	piblaster.setPwm(17, convertedValue);
 }
 
-function throttle(value){
-	const filteredValue = Math.min(Math.max(value, -100), 100)
-	const convertedValue = (150 - filteredValue/5)/1000;
-	console.log("Setting throttle to: ",convertedValue);
-        piblaster.setPwm(18, convertedValue);
+function throttle(value) {
+	const filteredValue = Math.min(Math.max(value, -100), 100);
+	const convertedValue = (150 - filteredValue / 5) / 1000;
+	console.log("Setting throttle to: ", convertedValue);
+	piblaster.setPwm(18, convertedValue);
 }
 
 //var HID = require("node-hid");
@@ -38,23 +37,26 @@ function throttle(value){
 //hid.on("data", function (data) {
 //	console.log(data[1]);
 // });
-try{var HID = require("node-hid");
-console.log(HID.devices());
-const Gamecontroller = require("gamecontroller");
-const ctrl = new Gamecontroller("bitdo_Dinput");
-console.log(Gamecontroller.getDevices());
-ctrl.connect(function () {
-	console.log("connected");
-});
-ctrl.on("JOYL:move", function (position) {
-	const value = position.x / 1.275 - 100;
-	steer(value);
-});
-ctrl.on("JOYR:move", function (position) {
-	const value = position.y / 1.275 - 100;
-	throttle(value)
-});}
-catch{console.log("could not use controller");}
+try {
+	var HID = require("node-hid");
+	console.log(HID.devices());
+	const Gamecontroller = require("gamecontroller");
+	const ctrl = new Gamecontroller("bitdo_Dinput");
+	console.log(Gamecontroller.getDevices());
+	ctrl.connect(function () {
+		console.log("connected");
+	});
+	ctrl.on("JOYL:move", function (position) {
+		const value = position.x / 1.275 - 100;
+		steer(value);
+	});
+	ctrl.on("JOYR:move", function (position) {
+		const value = position.y / 1.275 - 100;
+		throttle(value);
+	});
+} catch {
+	console.log("could not use controller");
+}
 // ctrl.on("X:press", function () {
 // 	console.log("X was pressed");
 // });
