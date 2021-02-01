@@ -1,11 +1,29 @@
-const express = require("express");
-const app = express();
+const app = require("express")();
 const port = 8080;
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 const piblaster = require("pi-blaster.js");
 
 app.listen(port, () => {
 	console.log("Started on port ", port);
 });
+
+io.on("connection", (serverSocket) => {
+	console.log("A user connected");
+	serverSocket.on("disconnect", () => {
+		console.log("A user disconnected");
+	});
+	serverSocket.on("controllerStatus", handleController(controller));
+});
+
+http.listen(port, () => {
+	console.log("listening on *:", port);
+});
+
+function handleController(controller) {
+	steer(Math.floor(controller.axes[0] * 100));
+	throttle(Math.floor(controller.axes[3] * 100));
+}
 
 app.get("/steering/:value", (request, response) => {
 	steer(request.params.value);
